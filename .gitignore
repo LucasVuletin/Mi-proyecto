@@ -1,0 +1,4 @@
+#estos se pueden descargar prehechos es para ignorar ciertas cosas
+db.sqlite3
+__pycache__
+venv
