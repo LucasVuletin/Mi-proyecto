@@ -12,7 +12,7 @@ from django.template import loader
 #Context, Template
 
 def inicio(request):
-    return HttpResponse("Hola, soy la nueva pagina")
+    return render(request, "indice/index.html", {} )
 
 def otra_vista(request):
     return HttpResponse('''
@@ -34,7 +34,7 @@ def mi_plantilla(request):
     #Debi ponerle una 'r' por delante porque delante de un str determina que no tiene escape... sin importar de lo que va a usar
     #Lo hacemos template... pero debemos indicarle el template de DJANGO
     
-    template = loader.get_template("mi_plantilla.html")
+    #template = loader.get_template("mi_plantilla.html")
 
     #template = Template(plantilla.read()) #Para poder leer el archivo debemos hacerle READ para que lea el arhivo entero
 
@@ -52,9 +52,9 @@ def mi_plantilla(request):
 
     #context = Context(diccionario_de_datos)
 
-    plantilla_preparada = template.render(diccionario_de_datos) #Genera el archivo que el HTTPRESPONSE va a entender par apoder mostrarlo
+    #plantilla_preparada = template.render(diccionario_de_datos) #Genera el archivo que el HTTPRESPONSE va a entender par apoder mostrarlo
 
-    return HttpResponse(plantilla_preparada) #ENTONCES HICE TODO ESTO PARA QUE LEA EL TEXTO UBICADO EN MI_PLANTILLA.HTML
+    #return HttpResponse(plantilla_preparada) #ENTONCES HICE TODO ESTO PARA QUE LEA EL TEXTO UBICADO EN MI_PLANTILLA.HTML
 
     #SI QUISIERAMOS CREAR MAS PLANTILLAS DEBERIAMOS CODEAR SIEMPRE
     #LO MISMO ENTONCES UTILIZAMOS UN LOADER. Con este reemplazamos
@@ -62,3 +62,7 @@ def mi_plantilla(request):
     #Debo ir a setting.templates para cargar la direccion completa
     #Ademas no necesitamos un context... directamente renderizamos el dic
     #Tambien evitariamos plantilla.close()
+
+    #VERSION CON RENDER (aca textie plantilla_preparada y return)
+    #seguramente veamos render y no open ni el return
+    return render(request, "indice/mi_plantilla.html", diccionario_de_datos)
