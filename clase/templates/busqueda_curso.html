@@ -1,0 +1,32 @@
+{% extends "indice/index.html" %}
+
+{% block header_index %}
+
+{% endblock header_index %}
+
+
+{% block pruebaTemplate %}
+    
+     <form action="busqueda_curso" method="get">
+        {% csrf_token %}
+
+        <table>
+            {{buscador.as_table}}
+        </table>
+
+        <input type="submit" placeholder="Enviar">
+     </form>
+
+    {% if dato  %}
+        Se busco el dato: {{dato}}
+        {% for curso in curso_buscado %}
+            <li>
+                {{curso}}
+            </li>
+        {% endfor %}
+
+    {% else %}
+        No se busco nada...
+    {% endif %}
+   
+{% endblock pruebaTemplate %}

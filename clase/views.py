@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from clase.models import curso 
-from clase.forms import CursoFormulario
+from clase.forms import BusquedaCurso, CursoFormulario
 import random
 # Create your views here.
 
@@ -23,7 +23,6 @@ def formulario_curso(request):
     #return render(request, 'formulario_curso.html',{})
 
     #Con formularios de django
-
     if request.method == 'POST':
         formulario = CursoFormulario(request.POST)
 
@@ -34,4 +33,15 @@ def formulario_curso(request):
             return render(request, 'indice/index.html', {'nuevo_curso': nuevo_curso})
 
     formulario = CursoFormulario()
-    return render(request, 'formulario_curso.html',{'formulario': formulario})    
+    return render(request, 'formulario_curso.html',{'formulario': formulario})
+
+def busqueda_curso(request):
+    curso_buscado = []
+    dato = request.GET.get('partial_curso', None)
+    
+    if dato is not None:
+        #cursos_buscados = curso.objects.filter(curso-dato)
+        curso_buscado = curso.objects.filter(nombre__icontains=dato)
+
+    buscador = BusquedaCurso()
+    return render(request, "busqueda_curso.html", {'buscador': buscador, 'curso_buscado': curso_buscado}, {'dato': dato})
