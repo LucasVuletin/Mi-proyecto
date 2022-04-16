@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from clase.models import curso, estudiante, profesor 
 from clase.forms import BusquedaCurso, CursoFormulario, EstudianteFormulario
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 import random
 # Create your views here.
 
@@ -58,6 +60,7 @@ def listado_estudiantes(request):
         {'listado_estudiantes': listado_estudiantes}
     )    
 
+@login_required
 def crear_estudiante(request):
     if request.method == 'POST':
         formulario = EstudianteFormulario(request.POST)
@@ -110,7 +113,7 @@ def borrar_estudiante(request, id):
 #     email = models.EmailField()
 #     profesion = models.CharField(max_length=30)
 
-class ProfesorLista(ListView):
+class ProfesorLista(LoginRequiredMixin, ListView):
     model = profesor
     template_name = 'profesor_list.html'
 

@@ -22,16 +22,20 @@
         <!-- Navigation-->
         <nav class="navbar navbar-light bg-light static-top">
             <div class="container">
+                {% comment %} <a class="navbar-brand" href={% url 'formulario_curso' %}>Formulario</a>
+                <a class="navbar-brand" href={% url 'busqueda_curso' %}>Buscar</a> {% endcomment %}
+                {% comment %} <a class="navbar-brand" href={% url 'mi_plantilla' %}>Mi plantilla</a> {% endcomment %}
                 <a class="navbar-brand" href={% url 'inicio' %}>Inicio</a>
-                <a class="navbar-brand" href={% url 'mi_plantilla' %}>Mi plantilla</a>
                 <a class="navbar-brand" href={% url 'listado_estudiantes' %}>Estudiantes</a>
-                <a class="navbar-brand" href={% url 'formulario_curso' %}>Formulario</a>
-                <a class="navbar-brand" href={% url 'busqueda_curso' %}>Buscar</a>
                 <a class="navbar-brand" href={% url 'profesor_listado' %}>Profesores</a>
+                <a class="navbar-brand" href={% url 'login' %}>Login</a>
+                <a class="navbar-brand" href={% url 'logout' %}>Logout</a>
+                <a class="navbar-brand" href={% url 'registrar' %}>Registrar</a>
 
                 {% comment "" %}
                 <a class="btn btn-primary" href="#signup">Sign Up</a>
                 {% endcomment %}
+                
             </div>
         </nav>
 
@@ -43,7 +47,13 @@
                         <div class="col-xl-6">
                             <div class="text-center text-white">
                                 <!-- Page heading-->
-                                <h1 class="mb-5">BIENVENIDOS</h1>
+                                <h1 class="mb-5">
+                                    {% if Mensaje %}
+                                        {{Mensaje}}
+                                    {% else %}
+                                        Bienvenidos
+                                    {% endif %}
+                                </h1>
                                 <!-- Signup form-->
                                 <!-- * * * * * * * * * * * * * * *-->
                                 <!-- * * SB Forms Contact Form * *-->

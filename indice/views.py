@@ -1,5 +1,7 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
+from django.contrib.auth import login as django_login, authenticate
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from .forms import NuestraCreacionUser
 # Create your views here.
 
 
@@ -8,7 +10,7 @@ from re import template
 from django.http import HttpResponse
 import random
 
-from django.template import loader
+#from django.template import loader
 #Context, Template
 
 def inicio(request):
@@ -66,3 +68,42 @@ def mi_plantilla(request):
     #VERSION CON RENDER (aca textie plantilla_preparada y return)
     #seguramente veamos render y no open ni el return
     return render(request, "indice/mi_plantilla.html", diccionario_de_datos)
+
+def login(request):
+    #django_login, authenticate
+    
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                django_login(request, user=user)
+                return render(request, 'indice/index.html', {'Mensaje': 'Te logueaste!'})
+            else:
+                return render(request, 'indice/login.html', {'form': form, 'Mensaje':'No se autentico'})
+            
+        else:
+            return render(request, 'indice/login.html', {'form': form, 'Mensaje': 'Datos con formato incorrecto'})
+    else:
+        form = AuthenticationForm()
+        return render(request, 'indice/login.html', {'form': form, 'Mensaje': '' })
+
+def registrar(request):
+
+    if request.method == 'POST':
+        form = NuestraCreacionUser(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            form.save()
+            return render(request, 'indice/index.html', {'Mensaje': f'Se creo el user {username}'})
+        else:
+            return render(request, 'indice/registrar.html', {'form': form, 'Mensaje':''})  
+
+    form = NuestraCreacionUser()
+    return render(request, 'indice/registrar.html', {'form': form, 'Mensaje':''})   

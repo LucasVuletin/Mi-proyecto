@@ -1,0 +1,17 @@
+{% extends 'indice/index.html' %}
+
+{% block header_index %}
+{% endblock header_index %}
+
+{% block pruebaTemplate %}
+
+    {% if Mensaje %}
+        {{Mensaje}}
+    {% endif %}
+
+    <form action="" method="post">
+        {% csrf_token %}
+            {{form.as_p}}
+        <button>Registrarse</button>
+    </form>
+{% endblock pruebaTemplate %}
