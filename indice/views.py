@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login as django_login, authenticate
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from .forms import NuestraCreacionUser
+from .forms import NuestraCreacionUser, NuestraEdicionUser
+from django.contrib.auth.decorators import login_required
+from .models import Avatar
 # Create your views here.
 
 
@@ -14,7 +16,7 @@ import random
 #Context, Template
 
 def inicio(request):
-    return render(request, "indice/index.html", {} )
+    return render(request, "indice/index.html", {'user_avatar_url': buscar_url_avatar(request.user)} )
 
 def otra_vista(request):
     return HttpResponse('''
@@ -106,4 +108,42 @@ def registrar(request):
             return render(request, 'indice/registrar.html', {'form': form, 'Mensaje':''})  
 
     form = NuestraCreacionUser()
-    return render(request, 'indice/registrar.html', {'form': form, 'Mensaje':''})   
+    return render(request, 'indice/registrar.html', {'form': form, 'Mensaje':''}) 
+
+@login_required
+def editar(request):
+    request.user
+    Mensaje = ''
+
+    if request.method == 'POST':
+            form = NuestraEdicionUser(request.POST)
+
+            if form.is_valid():
+                data = form.cleaned_data
+
+                request.user.email = data.get('email', '')
+                request.user.first_name = data.get('first_name', '')
+                request.user.last_name = data.get('last_name', '')
+                if data.get('password1')==data.get('password2') and len(data.get('password1'))>8:
+                    request.user.set_password(data.get('password'))
+                else:
+                    Mensaje = 'No se modificó el password'
+
+                request.user.save()
+
+                return render(request, 'indice/index.html', {'Mensaje': Mensaje}, {'user_avatar_url': buscar_url_avatar(request.user)})
+            else:
+                return render(request, 'indice/registrar.html', {'form': form, 'Mensaje':''}, {'user_avatar_url': buscar_url_avatar(request.user)})  
+
+    form = NuestraEdicionUser(
+        initial={
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'email': request.user.email,
+            'username': request.user.email
+        }
+    )
+    return render(request, 'indice/editar_user.html', {'form': form, 'Mensaje':''}, {'user_avatar_url': buscar_url_avatar(request.user)})
+
+def buscar_url_avatar(user):
+    return Avatar.objects.filter(user=user)[0].imagen.url               
